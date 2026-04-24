@@ -6,4 +6,4 @@
 #owner will be requested review when someone opens a pull request
 
 #To avoid potential issues, it's best to use team names that do not contain periods when referencing them in a CODEOWNERS file
-* @databrickslabs/conversions-api-app-write
+* @databrickslabs/meta-conversions-api-app-write

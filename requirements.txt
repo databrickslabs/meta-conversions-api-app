@@ -28,9 +28,9 @@ colorama==0.4.6 ; sys_platform == 'win32'
 cryptography==46.0.5
     # via google-auth
 databricks-sdk==0.102.0
-    # via conversions-api-app
+    # via meta-conversions-api-app
 fastapi==0.135.1
-    # via conversions-api-app
+    # via meta-conversions-api-app
 google-auth==2.49.1
     # via databricks-sdk
 h11==0.16.0
@@ -42,7 +42,7 @@ httpcore==1.0.9
 httptools==0.7.1
     # via uvicorn
 httpx==0.28.1
-    # via conversions-api-app
+    # via meta-conversions-api-app
 idna==3.11
     # via
     #   anyio
@@ -58,17 +58,17 @@ pycparser==3.0 ; implementation_name != 'PyPy' and platform_python_implementatio
     # via cffi
 pydantic==2.12.5
     # via
-    #   conversions-api-app
     #   fastapi
+    #   meta-conversions-api-app
 pydantic-core==2.41.5
     # via pydantic
 python-dotenv==1.2.2
     # via uvicorn
 python-multipart==0.0.22
-    # via conversions-api-app
+    # via meta-conversions-api-app
 pyyaml==6.0.3
     # via
-    #   conversions-api-app
+    #   meta-conversions-api-app
     #   uvicorn
 requests==2.32.5
     # via databricks-sdk
@@ -89,7 +89,7 @@ typing-inspection==0.4.2
 urllib3==2.6.3
     # via requests
 uvicorn==0.42.0
-    # via conversions-api-app
+    # via meta-conversions-api-app
 uvloop==0.22.1 ; platform_python_implementation != 'PyPy' and sys_platform != 'cygwin' and sys_platform != 'win32'
     # via uvicorn
 watchfiles==1.1.1

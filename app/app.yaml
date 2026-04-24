@@ -1,4 +1,4 @@
-name: 'conversions-api-app'
+name: 'meta-conversions-api-app'
 description: 'Guided setup companion for connecting your Databricks Lakehouse to Meta''s Conversions API (CAPI).'
 command: ['python', 'app.py']
 env:

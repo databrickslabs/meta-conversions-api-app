@@ -19,7 +19,7 @@ Initial Labs release.
 - **Dual-mode auth** — detects Databricks Apps runtime via `DATABRICKS_APP_NAME`; local dev reads from `~/.databrickscfg`.
 - **Databricks Labs scaffolding** — `LICENSE`, `NOTICE`, `CONTRIBUTING.md`, `SECURITY.md`, `CODEOWNERS.txt`, `Makefile`, pre-commit config, CLAUDE.md.
 - **CI** — GitHub Actions workflow for backend tests + frontend type-check and build; CodeQL security scanning on push, PR, and weekly schedule; Dependabot for pip, npm, and GitHub Actions ecosystems.
-- **Telemetry** — `conversions-api-app/<version>` prefix registered with the Databricks SDK user-agent and propagated to direct REST calls from the app.
+- **Telemetry** — `meta-conversions-api-app/<version>` prefix registered with the Databricks SDK user-agent and propagated to direct REST calls from the app.
 - **Test coverage** — `pytest-cov` reporting with Codecov integration; baseline 30% (target 80%, informational while we build up the suite).
 
 ### Infrastructure
@@ -27,5 +27,5 @@ Initial Labs release.
 - Frontend: React + TypeScript + Vite + React Bootstrap.
 - Python 3.11+, Node 20+.
 
-[Unreleased]: https://github.com/databrickslabs/conversions-api-app/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/databrickslabs/conversions-api-app/releases/tag/v0.1.0
+[Unreleased]: https://github.com/databrickslabs/meta-conversions-api-app/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/databrickslabs/meta-conversions-api-app/releases/tag/v0.1.0

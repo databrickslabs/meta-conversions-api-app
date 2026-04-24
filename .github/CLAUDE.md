@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-`conversions-api-app` is a Databricks App that provides a guided setup experience for connecting a Databricks lakehouse to [Meta's Conversions API (CAPI)](https://developers.facebook.com/docs/marketing-api/conversions-api/). It's a companion to the [Meta Conversions API marketplace listing](https://marketplace.databricks.com/details/8a8f4ead-db28-45e9-b39b-aabbbe1dbe08/Meta_Meta-Conversions-API).
+`meta-conversions-api-app` is a Databricks App that provides a guided setup experience for connecting a Databricks lakehouse to [Meta's Conversions API (CAPI)](https://developers.facebook.com/docs/marketing-api/conversions-api/). It's a companion to the [Meta Conversions API marketplace listing](https://marketplace.databricks.com/details/8a8f4ead-db28-45e9-b39b-aabbbe1dbe08/Meta_Meta-Conversions-API).
 
 **Stack:** FastAPI (Python) backend + React/TypeScript/Vite frontend, deployed as a Databricks App.
 
@@ -54,7 +54,7 @@ You are an expert in **Python, FastAPI, Databricks Apps, Databricks SDK, Databri
 ## Deployment
 
 - Build the frontend first: `cd app/frontend && npm run build` (or `make build`).
-- Sync to a workspace path, then `databricks apps deploy conversions-api-app --source-code-path <workspace-path>/app`.
+- Sync to a workspace path, then `databricks apps deploy meta-conversions-api-app --source-code-path <workspace-path>/app`.
 - After creating a new app, run `databricks apps update` to grant the `user_api_scopes` from `app/app.yaml` — deploy alone does not grant them.
 
 ## When Making Changes

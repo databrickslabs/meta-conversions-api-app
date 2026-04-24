@@ -33,7 +33,7 @@ What actually happened. Include error messages, stack traces, or screenshots.
 
 ## Logs
 
-Paste relevant server logs from the Databricks App (`databricks apps logs conversions-api-app`) or browser console output. Redact any access tokens or secrets.
+Paste relevant server logs from the Databricks App (`databricks apps logs meta-conversions-api-app`) or browser console output. Redact any access tokens or secrets.
 
 ## Additional context
 

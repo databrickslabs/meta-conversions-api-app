@@ -16,9 +16,9 @@ IS_DATABRICKS_APP = bool(os.environ.get("DATABRICKS_APP_NAME"))
 META_API_VERSION = "v24.0"
 
 # App identity for telemetry — propagated to Databricks SDK user-agent
-APP_NAME = "conversions-api-app"
+APP_NAME = "meta-conversions-api-app"
 try:
-    APP_VERSION = _pkg_version("conversions-api-app")
+    APP_VERSION = _pkg_version("meta-conversions-api-app")
 except PackageNotFoundError:
     APP_VERSION = "0.1.0"
 

@@ -1,10 +1,10 @@
-# Contributing to conversions-api-app
+# Contributing to meta-conversions-api-app
 
-We happily welcome contributions to *conversions-api-app*. We use GitHub Issues to track community reported issues and GitHub Pull Requests for accepting changes.
+We happily welcome contributions to *meta-conversions-api-app*. We use GitHub Issues to track community reported issues and GitHub Pull Requests for accepting changes.
 
 ## Reporting Issues
 
-Please file bugs, feature requests, and questions as [GitHub Issues](https://github.com/databrickslabs/conversions-api-app/issues). Before filing, search existing issues to avoid duplicates.
+Please file bugs, feature requests, and questions as [GitHub Issues](https://github.com/databrickslabs/meta-conversions-api-app/issues). Before filing, search existing issues to avoid duplicates.
 
 ## Development Setup
 

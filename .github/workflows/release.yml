@@ -51,7 +51,7 @@ jobs:
 
       - name: Package frontend dist
         run: |
-          cd app/frontend && zip -r ../../conversions-api-app-frontend-${{ github.ref_name }}.zip dist/
+          cd app/frontend && zip -r ../../meta-conversions-api-app-frontend-${{ github.ref_name }}.zip dist/
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -61,6 +61,6 @@ jobs:
           generate_release_notes: true
           body_path: CHANGELOG.md
           files: |
-            conversions-api-app-frontend-${{ github.ref_name }}.zip
+            meta-conversions-api-app-frontend-${{ github.ref_name }}.zip
           draft: false
           prerelease: ${{ contains(github.ref_name, '-') }}

@@ -1,6 +1,6 @@
 # Meta Conversions API App — Documentation
 
-`conversions-api-app` is a Databricks App that gives Meta's customers — businesses that run ads on Facebook and Instagram — a guided, UI-driven way to send server-side conversion events from their Databricks Lakehouse to [Meta's Conversions API (CAPI)](https://developers.facebook.com/docs/marketing-api/conversions-api/).
+`meta-conversions-api-app` is a Databricks App that gives Meta's customers — businesses that run ads on Facebook and Instagram — a guided, UI-driven way to send server-side conversion events from their Databricks Lakehouse to [Meta's Conversions API (CAPI)](https://developers.facebook.com/docs/marketing-api/conversions-api/).
 
 It's a companion to the [Meta Conversions API Marketplace listing](https://marketplace.databricks.com/details/8a8f4ead-db28-45e9-b39b-aabbbe1dbe08/Meta_Meta-Conversions-API), which Databricks hosts on Meta's behalf.
 

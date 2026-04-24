@@ -11,7 +11,7 @@ This app reduces Quick Start to ~5 clicks inside a single Databricks App.
 ```mermaid
 graph LR
     subgraph Customer["Meta's Customer — Databricks Workspace"]
-        subgraph App["conversions-api-app (Databricks App)"]
+        subgraph App["meta-conversions-api-app (Databricks App)"]
             FE[React Frontend<br/>Wizard • Quick Start • Jobs]
             BE[FastAPI Backend]
             FE --> BE
@@ -34,7 +34,7 @@ graph LR
 ```mermaid
 sequenceDiagram
     actor User as Marketer
-    participant App as conversions-api-app
+    participant App as meta-conversions-api-app
     participant DB as Databricks
     participant Meta as Meta Graph API
 

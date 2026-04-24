@@ -1,7 +1,7 @@
 # Meta Conversions API App for Databricks
 
-[![build](https://github.com/databrickslabs/conversions-api-app/actions/workflows/push.yml/badge.svg)](https://github.com/databrickslabs/conversions-api-app/actions/workflows/push.yml)
-[![codecov](https://codecov.io/github/databrickslabs/conversions-api-app/graph/badge.svg)](https://codecov.io/github/databrickslabs/conversions-api-app)
+[![build](https://github.com/databrickslabs/meta-conversions-api-app/actions/workflows/push.yml/badge.svg)](https://github.com/databrickslabs/meta-conversions-api-app/actions/workflows/push.yml)
+[![codecov](https://codecov.io/github/databrickslabs/meta-conversions-api-app/graph/badge.svg)](https://codecov.io/github/databrickslabs/meta-conversions-api-app)
 ![python](https://img.shields.io/badge/python-3.11%2B-blue.svg)
 ![node](https://img.shields.io/badge/node-20%2B-green.svg)
 ![license](https://img.shields.io/badge/license-Databricks-lightgrey.svg)
@@ -44,14 +44,14 @@ See [`docs/deployment.md`](./docs/deployment.md) for the full flow.
 cd app/frontend && npm run build && cd ../..
 
 # Create the app
-databricks apps create conversions-api-app \
+databricks apps create meta-conversions-api-app \
   --description "Meta Conversions API Connector" \
   -p <your-profile>
 
 # Deploy — note the /app suffix: Marketplace requires the source
 # code to live in a subfolder, so --source-code-path points at app/
-databricks apps deploy conversions-api-app \
-  --source-code-path /Workspace/Users/<your-email>/conversions-api-app/app \
+databricks apps deploy meta-conversions-api-app \
+  --source-code-path /Workspace/Users/<your-email>/meta-conversions-api-app/app \
   -p <your-profile>
 ```
 
@@ -84,7 +84,7 @@ Open http://localhost:5173
 ## Architecture
 
 ```
-conversions-api-app/
+meta-conversions-api-app/
   app/                        # App source — deployed to Databricks
     app.py                    # FastAPI entry point (serves API + React SPA)
     app.yaml                  # Databricks Apps deployment config

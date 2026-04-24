@@ -1,6 +1,6 @@
 version: 1
 
-name: conversions-api-app
+name: meta-conversions-api-app
 description: |
   Guided companion app for the Meta Conversions API Marketplace listing.
   Gives Meta's advertiser customers a UI-driven way to send server-side

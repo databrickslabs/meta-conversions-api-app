@@ -51,7 +51,7 @@ Before pushing the tag, verify:
 - [ ] `make lint` passes
 - [ ] `frontend/dist/` is rebuilt and committed (required because the Databricks App runtime serves the pre-built bundle)
 - [ ] `CHANGELOG.md` is up to date
-- [ ] The app deploys cleanly via `databricks apps deploy conversions-api-app`
+- [ ] The app deploys cleanly via `databricks apps deploy meta-conversions-api-app`
 
 ## Hotfix process
 

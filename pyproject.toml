@@ -1,5 +1,5 @@
 [project]
-name = "conversions-api-app"
+name = "meta-conversions-api-app"
 version = "0.1.0"
 description = "Databricks App that gives Meta's advertiser customers a guided, UI-driven way to send server-side conversion events from their Databricks Lakehouse to Meta's Conversions API (CAPI)."
 readme = "README.md"
@@ -59,10 +59,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/databrickslabs/conversions-api-app"
-Repository = "https://github.com/databrickslabs/conversions-api-app"
-Issues = "https://github.com/databrickslabs/conversions-api-app/issues"
-Changelog = "https://github.com/databrickslabs/conversions-api-app/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/databrickslabs/meta-conversions-api-app"
+Repository = "https://github.com/databrickslabs/meta-conversions-api-app"
+Issues = "https://github.com/databrickslabs/meta-conversions-api-app/issues"
+Changelog = "https://github.com/databrickslabs/meta-conversions-api-app/blob/main/CHANGELOG.md"
 
 [tool.uv]
 

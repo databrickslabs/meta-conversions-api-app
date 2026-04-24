@@ -11,11 +11,11 @@ Fix: clean up the workspace and re-sync with explicit excludes.
 ```bash
 # Remove the problem directories from the workspace
 for dir in .venv .git .claude .databricks __pycache__ node_modules; do
-  databricks workspace delete "/Workspace/Users/<you>/conversions-api-app/$dir" --recursive 2>/dev/null
+  databricks workspace delete "/Workspace/Users/<you>/meta-conversions-api-app/$dir" --recursive 2>/dev/null
 done
 
 # Re-sync with excludes
-databricks sync . /Workspace/Users/<you>/conversions-api-app --watch=false \
+databricks sync . /Workspace/Users/<you>/meta-conversions-api-app --watch=false \
   --exclude .git --exclude node_modules --exclude __pycache__ --exclude .databricks --exclude .venv
 ```
 
@@ -87,5 +87,5 @@ The Vite dev server proxies `/api/*` to `http://localhost:8000` by default. Make
 
 ## Getting help
 
-- File issues at [github.com/databrickslabs/conversions-api-app/issues](https://github.com/databrickslabs/conversions-api-app/issues)
+- File issues at [github.com/databrickslabs/meta-conversions-api-app/issues](https://github.com/databrickslabs/meta-conversions-api-app/issues)
 - Security vulnerabilities: see [`SECURITY.md`](../SECURITY.md)

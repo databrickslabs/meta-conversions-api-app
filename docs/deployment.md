@@ -1,12 +1,12 @@
 # Deployment
 
-How to deploy `conversions-api-app` to a Databricks workspace.
+How to deploy `meta-conversions-api-app` to a Databricks workspace.
 
 ## Prerequisites
 
 - Databricks CLI v0.210+ installed and configured for your target workspace
 - Node.js 20+ and `uv` for Python
-- Write access to a workspace path (e.g. `/Workspace/Users/<you>/conversions-api-app`)
+- Write access to a workspace path (e.g. `/Workspace/Users/<you>/meta-conversions-api-app`)
 - Permission to create Databricks Apps in the target workspace
 
 ## One-time setup per workspace
@@ -26,7 +26,7 @@ This populates `app/frontend/dist/`, which is committed to the repo so the Datab
 ### 2. Sync the repo to your workspace
 
 ```bash
-databricks sync . /Workspace/Users/<your-email>/conversions-api-app \
+databricks sync . /Workspace/Users/<your-email>/meta-conversions-api-app \
   --watch=false \
   --exclude .git \
   --exclude node_modules \
@@ -40,7 +40,7 @@ Excluding `.git`, `node_modules`, `.venv`, `__pycache__`, and `.databricks` is i
 ### 3. Create the app
 
 ```bash
-databricks apps create conversions-api-app \
+databricks apps create meta-conversions-api-app \
   --description "Meta Conversions API Connector"
 ```
 
@@ -49,8 +49,8 @@ This provisions app compute. It takes 2–5 minutes on first creation.
 ### 4. Deploy the source
 
 ```bash
-databricks apps deploy conversions-api-app \
-  --source-code-path /Workspace/Users/<your-email>/conversions-api-app/app
+databricks apps deploy meta-conversions-api-app \
+  --source-code-path /Workspace/Users/<your-email>/meta-conversions-api-app/app
 ```
 
 ⚠️ Note the `/app` suffix. The Marketplace publishing spec requires the app's source code to live in a subfolder, so `--source-code-path` must point at the `app/` subfolder within the synced repo, not the repo root.
@@ -60,7 +60,7 @@ databricks apps deploy conversions-api-app \
 ⚠️ Important: the `user_api_scopes` declared in `app.yaml` are what the app *requests*. They must be explicitly *granted* via `update` or the UI. `create` + `deploy` alone do not grant them.
 
 ```bash
-databricks apps update conversions-api-app --json '{
+databricks apps update meta-conversions-api-app --json '{
   "user_api_scopes": [
     "sql",
     "sql.warehouses",
@@ -75,7 +75,7 @@ databricks apps update conversions-api-app --json '{
 After granting, verify with:
 
 ```bash
-databricks apps get conversions-api-app --output json | jq '.effective_user_api_scopes'
+databricks apps get meta-conversions-api-app --output json | jq '.effective_user_api_scopes'
 ```
 
 You should see the scopes from `app.yaml` plus the default `iam.current-user:read` and `iam.access-control:read`.
@@ -89,18 +89,18 @@ For subsequent deployments:
 cd app/frontend && npm run build && cd ../..
 
 # Sync latest source
-databricks sync . /Workspace/Users/<your-email>/conversions-api-app --watch=false \
+databricks sync . /Workspace/Users/<your-email>/meta-conversions-api-app --watch=false \
   --exclude .git --exclude node_modules --exclude __pycache__ --exclude .databricks --exclude .venv
 
 # Deploy — note the /app suffix on the source-code-path
-databricks apps deploy conversions-api-app \
-  --source-code-path /Workspace/Users/<your-email>/conversions-api-app/app
+databricks apps deploy meta-conversions-api-app \
+  --source-code-path /Workspace/Users/<your-email>/meta-conversions-api-app/app
 ```
 
 Or use the bundled `make` target (handles the `/app` suffix automatically):
 
 ```bash
-SOURCE_PATH=/Workspace/Users/<your-email>/conversions-api-app/app make deploy
+SOURCE_PATH=/Workspace/Users/<your-email>/meta-conversions-api-app/app make deploy
 ```
 
 ## Local development
@@ -131,8 +131,8 @@ If you deploy to more than one workspace (e.g. dogfood + staging + prod), create
 ## Removing the app
 
 ```bash
-databricks apps stop conversions-api-app
-databricks apps delete conversions-api-app
+databricks apps stop meta-conversions-api-app
+databricks apps delete meta-conversions-api-app
 ```
 
 Neither of these removes the synced source from your workspace — do that separately if needed.

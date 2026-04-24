@@ -30,6 +30,6 @@ build:
 	cd app/frontend && npm run build
 
 deploy: build
-	@echo "Deploying conversions-api-app..."
-	databricks apps deploy conversions-api-app \
-		--source-code-path $${SOURCE_PATH:-/Workspace/Users/$${USER}/conversions-api-app/app}
+	@echo "Deploying meta-conversions-api-app..."
+	databricks apps deploy meta-conversions-api-app \
+		--source-code-path $${SOURCE_PATH:-/Workspace/Users/$${USER}/meta-conversions-api-app/app}
