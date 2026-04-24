@@ -1,15 +1,16 @@
-schema_version: 1
+version: 1
 
-name: Meta Conversions API Connector
+name: conversions-api-app
 description: |
   Guided companion app for the Meta Conversions API Marketplace listing.
   Gives Meta's advertiser customers a UI-driven way to send server-side
   conversion events from their Databricks Lakehouse to Meta's Conversions
   API (CAPI) — no SQL, notebooks, or manual secret management required.
 
-icon_file: ./frontend/dist/favicon.svg
-
-entry_point: app.py
-
-readme: ./README.md
-license: ./LICENSE
+user_api_scopes:
+  - sql
+  - sql.warehouses
+  - catalog.catalogs:read
+  - catalog.schemas:read
+  - catalog.tables:read
+  - files.files
