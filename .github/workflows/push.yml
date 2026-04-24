@@ -85,3 +85,65 @@ jobs:
       - name: Build
         working-directory: app/frontend
         run: npm run build
+
+  licenses:
+    name: License Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Scan Python dependency licenses
+        run: |
+          uvx pip-licenses \
+            --python=.venv/bin/python \
+            --from=mixed \
+            --format=markdown \
+            --fail-on="GPL;AGPL;LGPL;SSPL;OSL;EUPL;CPAL"
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: app/frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: app/frontend
+        run: npm ci
+
+      - name: Scan npm dependency licenses
+        working-directory: app/frontend
+        run: |
+          npx --yes license-checker --production \
+            --failOn 'GPL;AGPL;LGPL;SSPL;OSL;EUPL;CPAL' \
+            --summary
+
+  secrets:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
