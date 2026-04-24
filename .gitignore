@@ -17,6 +17,11 @@ htmlcov/
 node_modules/
 npm-debug.log*
 
+# Frontend dev-loop artifacts (Puppeteer screenshots, TS incremental build cache, Vite dep cache)
+app/frontend/test-screenshots/
+*.tsbuildinfo
+.vite/
+
 # Keep app/frontend/dist for deployment!
 # app/frontend/dist/  # DO NOT exclude this!
 
