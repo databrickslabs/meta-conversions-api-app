@@ -1,0 +1,9 @@
+#CODEOWNERS.txt is a file used by GitHub
+#https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+#identify the team that owns this repo
+#team must have explicit write access to the repo
+#owner will be requested review when someone opens a pull request
+
+#To avoid potential issues, it's best to use team names that do not contain periods when referencing them in a CODEOWNERS file
+* @databrickslabs/conversions-api-app-write

@@ -1,0 +1,43 @@
+codecov:
+  require_ci_to_pass: true
+  notify:
+    wait_for_ci: true
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...95"
+  status:
+    # Target is 80% per Databricks Labs checklist.
+    # Set informational=true while we build up coverage from the current
+    # baseline; flip to false once we reach the threshold.
+    project:
+      default:
+        target: 80%
+        threshold: 2%
+        informational: true
+    patch:
+      default:
+        target: 80%
+        threshold: 2%
+        informational: true
+
+parsers:
+  gcov:
+    branch_detection:
+      conditional: true
+      loop: true
+      method: false
+      macro: false
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false
+
+ignore:
+  - "tests/**"
+  - "frontend/**"
+  - "server/assets/**"
+  - "**/__init__.py"
+  - "**/__pycache__/**"

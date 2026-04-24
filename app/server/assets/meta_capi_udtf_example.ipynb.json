@@ -1,0 +1,976 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "6591b53b-6bca-4061-9a1d-86ebb199adbb",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "# Meta Conversions API - UDTF Example\n",
+    "\n",
+    "This notebook demonstrates how to send conversion events to Meta's Conversions API using a **User-Defined Table Function (UDTF)**. \n",
+    "\n",
+    "## What is the Conversions API?\n",
+    "\n",
+    "[Meta\u2019s Conversions API (CAPI)](https://developers.facebook.com/docs/marketing-api/conversions-api/) creates a direct server-to-Meta connection for sending conversion events. It helps:\n",
+    "- **Improve ad targeting** by sending conversion events directly from your infrastructure\n",
+    "- **Measure campaign performance** more accurately\n",
+    "- **Reduce cost per result** through better optimization\n",
+    "- **Match conversions to users** using hashed customer identifiers (email, phone, etc.)\n",
+    "\n",
+    "## What is a UDTF?\n",
+    "\n",
+    "A [User-Defined Table Function (UDTF)](https://docs.databricks.com/aws/en/udf/udtf-unity-catalog) is a PySpark construct that processes input rows and returns one or more output rows, and can be called directly in SQL using the `TABLE()` syntax. In this notebook, the UDTF is used to transform your raw conversion events and send them to Meta\u2019s Conversions API in controlled batches.\n",
+    "\n",
+    "In this notebook, the UDTF:\n",
+    "\n",
+    "- Converts your table schema into Meta\u2019s required Conversions API payload\n",
+    "- Automatically hashes user identifiers (email, phone) using SHA256 when needed\n",
+    "- Batches events efficiently (up to 1,000 per API call)\n",
+    "- Handles and reports errors gracefully, returning detailed batch-level status\n",
+    "- Works with flexible column mappings and any table structure\n",
+    "- Can be invoked directly from SQL (`TABLE()` syntax) for easy integration into ETL or analytics workflows\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "76649e74-0111-4fea-9f6b-a897f3dc34be",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "## In this notebook...\n",
+    "\n",
+    "This notebook demonstrated how to use a PySpark UDTF to send conversion events to Meta's Conversions API.\n",
+    "\n",
+    "### Key Concepts:\n",
+    "\n",
+    "1. **UDTF (User-Defined Table Function)**: A function that processes table data and can be used in SQL queries\n",
+    "2. **Column Mapping**: YAML configuration that maps your table columns to Meta's API format\n",
+    "3. **Batch Processing**: Events are automatically grouped and sent in batches (up to 1,000 per batch)\n",
+    "4. **Status Reporting**: The UDTF returns status information for each batch sent\n",
+    "\n",
+    "### Steps:\n",
+    "\n",
+    "1. Configure your Meta access token and Pixel ID using the widgets\n",
+    "2. Adjust the mapping YAML to match your actual table structure\n",
+    "3. Test with a small subset of data first (use `LIMIT` in your SQL query)\n",
+    "4. Verify events in Meta Events Manager\n",
+    "5. Once verified, send your full dataset"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "cab174e6-16db-4db3-a12b-ffeaf41e6080",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "## Step 1: Setup and Import Library\n",
+    "\n",
+    "First, we need to make the UDTF library available. The library contains the code that knows how to format and send events to Meta's Conversions API."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "f8cc612d-cdce-4706-aedb-6397f5bdc63e",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "outputs": [],
+   "source": [
+    "!pip install pyspark-udtf"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "a51e4e49-998d-42af-90b4-0ba333d8de2e",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# dbutils.library.restartPython() # Run this if Cell 6 fails."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "f524ffb4-7571-462d-9209-745329594633",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "### UDTF Implementation\n",
+    "\n",
+    "The UDTF processes your conversion events and sends them to Meta's Conversions API. Here's how it works:\n",
+    "\n",
+    "1. **Receives rows** from your table (one row = one conversion event)\n",
+    "2. **Transforms each row** using a mapping configuration (YAML) that tells it which columns map to which Meta API fields\n",
+    "3. **Batches events** together (up to 1,000 events per batch)\n",
+    "4. **Sends batches** to Meta's Graph API endpoint\n",
+    "5. **Returns status** for each batch (success/failed, number of events received, etc.)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "a2576267-de28-421b-bd87-d4de1f8d699b",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "Now we'll import the UDTF class and register it with Spark so it can be used in SQL queries."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "0b0facd9-dd7d-4c89-b89a-3fe942a3d130",
+     "showTitle": true,
+     "tableResultSettingsMap": {},
+     "title": "Import PySpark UDTF Library"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "from pyspark.sql.functions import udtf\n",
+    "from pyspark.sql.types import Row\n",
+    "from typing import Optional\n",
+    "import json\n",
+    "import requests\n",
+    "\n",
+    "# Import the MappingEngine which handles column mapping\n",
+    "from pyspark_udtf.udtfs.mapping_engine import MappingEngine\n",
+    "# Import the WriteToMetaCAPI UDTF class\n",
+    "from pyspark_udtf.udtfs.meta_capi import WriteToMetaCAPI"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "2a0bafaf-f406-4235-96cc-6b7b9f30faa6",
+     "showTitle": true,
+     "tableResultSettingsMap": {},
+     "title": "Register the UDTF"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Register the UDTF with Spark so it can be used in SQL queries\n",
+    "# After registration, you can call it as: write_to_meta_capi(...)\n",
+    "spark.udtf.register(\"write_to_meta_capi\", WriteToMetaCAPI)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "538f64ad-05ba-42d8-b6e2-6c0dcdce662c",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "## Step 2: Configure Meta API Credentials\n",
+    "\n",
+    "Your access token has been securely stored in Databricks Secrets by the Conversions API App.\n",
+    "The widgets below let you configure the Pixel ID, test event code, and catalog name.\n",
+    "\n",
+    "- **Pixel ID (Dataset ID)**: Identifies which Meta Pixel/Dataset to send events to\n",
+    "- **Access Token**: Retrieved automatically from Databricks Secrets\n",
+    "- **Test Event Code** (optional): Used for testing events in Meta Events Manager\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "3e597621-cbc6-43a7-b1d9-f0a381bc776a",
+     "showTitle": true,
+     "tableResultSettingsMap": {},
+     "title": "Setup Widgets for Initial Credential Input"
+    },
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Create widgets for Meta CAPI configuration parameters\n",
+    "dbutils.widgets.text(\"pixel_id\", \"\", \"Meta Pixel ID\")\n",
+    "dbutils.widgets.text(\"test_event_code\", \"\", \"Test Event Code (optional)\")\n",
+    "dbutils.widgets.text(\"api_version\", \"v24.0\", \"API Version\")\n",
+    "dbutils.widgets.text(\"delta_share_catalog\", \"__CATALOG_NAME__\", \"Delta Share Catalog\")\n",
+    "dbutils.widgets.text(\"secret_scope\", \"__SECRET_SCOPE__\", \"Secret Scope\")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "fbdf604e-8020-4ff2-b284-2414d6b8e713",
+     "showTitle": true,
+     "tableResultSettingsMap": {},
+     "title": "Reading Input Parameters"
+    },
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Retrieve configuration values\n",
+    "pixel_id = dbutils.widgets.get(\"pixel_id\")\n",
+    "test_event_code = dbutils.widgets.get(\"test_event_code\")\n",
+    "api_version = dbutils.widgets.get(\"api_version\")\n",
+    "delta_share_catalog = dbutils.widgets.get(\"delta_share_catalog\")\n",
+    "secret_scope = dbutils.widgets.get(\"secret_scope\")\n",
+    "\n",
+    "# Read access token from Databricks Secrets\n",
+    "access_token = dbutils.secrets.get(scope=secret_scope, key=\"access_token\")\n",
+    "\n",
+    "print(\"\u2713 Configuration loaded\")\n",
+    "print(f\"  API Version: {api_version}\")\n",
+    "print(f\"  Pixel ID: {pixel_id}\")\n",
+    "print(f\"  Catalog: {delta_share_catalog}\")\n",
+    "print(f\"  Secret Scope: {secret_scope}\")\n",
+    "if test_event_code:\n",
+    "    print(f\"  Test Event Code: {test_event_code}\")\n",
+    "print(\"  Access Token: \u2713 Retrieved from secrets\")\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "c73542ca-cfb8-44a6-be41-85395ae0eb88",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "## Step 3: Explore Sample Conversion Data\n",
+    "\n",
+    "Let's examine the sample conversion data. This data represents conversion events (like purchases, add-to-cart actions, etc.) that we want to send to Meta."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "8329f054-b570-4ca7-97e4-b1e1ba0c6552",
+     "showTitle": true,
+     "tableResultSettingsMap": {},
+     "title": "Cell 15"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# View the conversion_data table structure\n",
+    "# This table has individual columns that will be mapped to CAPI event format\n",
+    "conversion_df = spark.table(f\"{delta_share_catalog}.meta_capi.conversion_data\")\n",
+    "\n",
+    "print(\"Sample conversion data:\")\n",
+    "print(f\"Total rows: {conversion_df.count()}\")\n",
+    "print(\"\\nSchema:\")\n",
+    "conversion_df.printSchema()\n",
+    "print(\"\\nFirst 5 rows:\")\n",
+    "display(conversion_df.limit(5))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "d24002e4-ebf2-4d00-b361-5ca587585952",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "### Understanding the Data Structure\n",
+    "\n",
+    "**Understanding Conversion Events:**\n",
+    "- Each row represents one conversion event (e.g., a purchase, a lead, a page view)\n",
+    "- Events include information like when they happened (`event_time`), what type of event (`event_name`), and customer identifiers (`email`, `phone`)\n",
+    "- Customer identifiers are typically hashed (SHA256) for privacy before sending to Meta\n",
+    "\n",
+    "The conversion events data includes these key fields:\n",
+    "\n",
+    "**Required Fields:**\n",
+    "| Field           | Description                                                       |\n",
+    "| --------------- | ----------------------------------------------------------------- |\n",
+    "| `event_name`    | The type of conversion (e.g., \"Purchase\", \"AddToCart\", \"Lead\")    |\n",
+    "| `event_time`    | When the conversion happened (Unix timestamp in seconds)          |\n",
+    "| `action_source` | Where the event occurred (e.g., \"website\", \"email\", \"phone_call\") |\n",
+    "\n",
+    "\n",
+    "**User Identification Fields:**\n",
+    "| Field               | Description                                                  |\n",
+    "| ------------------- | ------------------------------------------------------------ |\n",
+    "| `email`             | Customer email address (hashed automatically before sending) |\n",
+    "| `phone`             | Customer phone number (hashed automatically before sending)  |\n",
+    "| `client_ip_address` | User's IP address (helps with matching)                      |\n",
+    "| `client_user_agent` | Browser/device information (helps with matching)             |\n",
+    "\n",
+    "**Event-Specific Data:**\n",
+    "| Field          | Description                                       |\n",
+    "| -------------- | ------------------------------------------------- |\n",
+    "| `value`        | Monetary value of the conversion (e.g., purchase) |\n",
+    "| `currency`     | Currency code (e.g., \"USD\", \"EUR\")                |\n",
+    "| `content_ids`  | Product IDs associated with the event             |\n",
+    "| `content_type` | Type of content (e.g., \"product\")                 |\n",
+    "\n",
+    "**Reference:** [Meta Conversions API - Event Parameters](https://developers.facebook.com/docs/marketing-api/conversions-api/parameters)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "dbc730c8-819c-47c9-86f0-4064df4d5abc",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "## Step 4: Configure Column Mapping\n",
+    "\n",
+    "The UDTF needs to know how to map your table columns to Meta's Conversions API format. This is done using a **YAML mapping configuration**.\n",
+    "\n",
+    "**Why Mapping is Needed:**\n",
+    "- Your table might have column names that don't exactly match Meta's API field names\n",
+    "- Meta expects nested structures (`user_data`, `custom_data`) while your table might have flat columns\n",
+    "- Some fields need transformations (e.g., hashing email/phone, converting timestamps)\n",
+    "\n",
+    "**Available Transforms:**\n",
+    "- `sha256`: Hash a value using SHA256 (required for email/phone)\n",
+    "- `normalize_email`: Normalize email format before hashing\n",
+    "- `normalize_phone`: Normalize phone format before hashing\n",
+    "- `to_epoch`: Convert timestamp to Unix epoch seconds\n",
+    "- `cast_int`, `cast_float`, `cast_string`: Type conversions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "df4f495f-98a9-4c9d-80f7-758e823e4e2c",
+     "showTitle": true,
+     "tableResultSettingsMap": {},
+     "title": "Fallback: Hard Coded YAML"
+    },
+    "jupyter": {
+     "source_hidden": true
+    }
+   },
+   "outputs": [],
+   "source": [
+    "# Create mapping YAML for the UDTF\n",
+    "# The mapping_yaml tells the UDTF how to transform input columns to CAPI event structure\n",
+    "# Based on MappingEngine implementation which supports:\n",
+    "# - Column references via 'source' field\n",
+    "# - Transforms: sha256, normalize, normalize_email, normalize_phone, to_epoch, cast_int, cast_float, cast_string\n",
+    "# - Literal values via 'type: literal' with 'value' field\n",
+    "# - Nested objects for user_data and custom_data\n",
+    "\n",
+    "# Mapping for conversion_data table (with individual columns)\n",
+    "# This maps individual table columns to CAPI event fields\n",
+    "mapping_yaml_conversion = \"\"\"\n",
+    "event_name:\n",
+    "  source: \"event_name\"\n",
+    "event_time:\n",
+    "  source: \"event_time\"\n",
+    "  transform: [\"to_epoch\"]\n",
+    "event_id:\n",
+    "  source: \"event_id\"\n",
+    "action_source:\n",
+    "  source: \"action_source\"\n",
+    "event_source_url:\n",
+    "  source: \"event_source_url\"\n",
+    "user_data:\n",
+    "  em:\n",
+    "    source: \"email\"\n",
+    "    transform: [\"normalize_email\", \"sha256\"]\n",
+    "  ph:\n",
+    "    source: \"phone\"\n",
+    "    transform: [\"normalize_phone\", \"sha256\"]\n",
+    "  client_ip_address:\n",
+    "    source: \"client_ip_address\"\n",
+    "  client_user_agent:\n",
+    "    source: \"client_user_agent\"\n",
+    "  fbc:\n",
+    "    source: \"fbc\"\n",
+    "  fbp:\n",
+    "    source: \"fbp\"\n",
+    "custom_data:\n",
+    "  value:\n",
+    "    source: \"value\"\n",
+    "    transform: [\"cast_float\"]\n",
+    "  currency:\n",
+    "    source: \"currency\"\n",
+    "  content_ids:\n",
+    "    source: \"content_ids\"\n",
+    "  content_type:\n",
+    "    source: \"content_type\"\n",
+    "\"\"\"\n",
+    "\n",
+    "print(\"\u2713 Mapping YAML configured\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "adafc5dd-ec24-43bd-8751-055acedf36d1",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "### Load Mapping from YAML File\n",
+    "\n",
+    "You can load the mapping configuration from a YAML file instead of hardcoding it.\n",
+    "This is useful for version control and reusability across multiple notebooks."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "097d5047-854f-4972-9fb5-d08a303663b6",
+     "showTitle": true,
+     "tableResultSettingsMap": {},
+     "title": "Import YAML Column Mapping"
+    }
+   },
+   "outputs": [],
+   "source": [
+    "import yaml\n",
+    "\n",
+    "# Path to the YAML file (relative to notebook location or use absolute path)\n",
+    "# In Databricks, you can use workspace paths like: \"/Workspace/path/to/mapping_conversion.yaml\"\n",
+    "yaml_path = f\"/Volumes/{delta_share_catalog}/meta_capi/mappings/mapping_conversion.yaml\"  # Assumes file is in the same directory as the notebook\n",
+    "\n",
+    "# Load the YAML file and convert back to string format (as expected by the UDTF)\n",
+    "with open(yaml_path, 'r') as f:\n",
+    "    yaml_content = yaml.safe_load(f)\n",
+    "    mapping_yaml_conversion = yaml.dump(yaml_content, default_flow_style=False)\n",
+    "\n",
+    "print(\"\u2713 Mapping YAML loaded from file\")\n",
+    "print(f\"  File path: {yaml_path}\")\n",
+    "print(\"  Note: You can use the hardcoded fallback (Cell 18) if you unable to load the YAML from Volumes\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "8ceb63cf-a67e-451b-a9c5-b02b09435748",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "## Step 5: Send Events Using the UDTF\n",
+    "\n",
+    "Now we'll use the UDTF in a SQL query to send conversion events to Meta's Conversions API. The UDTF will:\n",
+    "1. Process each row from your table\n",
+    "2. Transform it using the mapping configuration\n",
+    "3. Batch events together (up to 1,000 per batch)\n",
+    "4. Send batches to Meta's API\n",
+    "5. Return status information for each batch"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "4459db84-f259-459a-b81c-653683a2443f",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "### Example: Send All Conversion Events\n",
+    "\n",
+    "This example sends all events from the conversion_data table to Meta."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "fe295434-a697-4e63-8ef2-99c2b7c333c8",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "outputs": [],
+   "source": [
+    "table_definition = f\"\"\"\n",
+    "-- You can add additional columns or filters here\n",
+    "SELECT * \n",
+    "FROM {delta_share_catalog}.meta_capi.conversion_data\n",
+    "WHERE event_time >= (unix_timestamp(current_timestamp()) - 7 * 24 * 60 * 60) \n",
+    "\"\"\"\n",
+    "spark.sql(table_definition).display()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 0,
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "d26c7348-f0ec-4bf1-8ec9-a5f686136a6e",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "outputs": [],
+   "source": [
+    "table_definition = f\"\"\"\n",
+    "-- You can add additional columns or filters here\n",
+    "SELECT * \n",
+    "FROM {delta_share_catalog}.meta_capi.conversion_data\n",
+    "\"\"\"\n",
+    "    \n",
+    "result = spark.sql(f\"\"\"\n",
+    "        SELECT * \n",
+    "        FROM write_to_meta_capi(\n",
+    "            TABLE({table_definition}), \n",
+    "            '{pixel_id}', \n",
+    "            '{access_token}',\n",
+    "            '{mapping_yaml_conversion}', \n",
+    "            {f\"'{test_event_code}'\" if test_event_code else \"NULL\"}\n",
+    "        )\n",
+    "    \"\"\")\n",
+    "    \n",
+    "print(\"\u2713 UDTF execution completed\")\n",
+    "print(\"\\nResults:\")\n",
+    "display(result)\n",
+    "\n",
+    "# Summary statistics\n",
+    "print(\"\\nSummary:\")\n",
+    "result.createOrReplaceTempView(\"udtf_results\")\n",
+    "summary = spark.sql(\"\"\"\n",
+    "    SELECT \n",
+    "        status,\n",
+    "        SUM(events_received) as total_received,\n",
+    "        SUM(events_failed) as total_failed,\n",
+    "        COUNT(*) as batch_count\n",
+    "    FROM udtf_results\n",
+    "    GROUP BY status\n",
+    "\"\"\")\n",
+    "display(summary)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "1be777fe-8ac9-41ec-bedd-74c056eae769",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "### Understanding the Results\n",
+    "\n",
+    "The UDTF returns one row per batch sent to Meta's API. Each row contains:\n",
+    "\n",
+    "- **status**: \"success\" or \"failed\" - indicates if the batch was accepted by Meta\n",
+    "- **events_received**: Number of events Meta successfully received in this batch\n",
+    "- **events_failed**: Number of events that failed (usually 0 if status is \"success\")\n",
+    "- **fbtrace_id**: Meta's trace ID for debugging (useful if you need to contact Meta support)\n",
+    "- **error_message**: Details about any errors (NULL if successful)\n",
+    "\n",
+    "**What to Look For:**\n",
+    "- If `status = \"success\"` and `events_received` matches your batch size, everything worked correctly\n",
+    "- If `status = \"failed\"`, check the `error_message` for details about what went wrong\n",
+    "- The `fbtrace_id` can be used in Meta Events Manager to verify events were received"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "d629ded0-cecc-47b2-ae39-252130ccf35c",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "## Step 6: Verify Events in Meta Events Manager\n",
+    "\n",
+    "After sending events, you can verify they were received by Meta:\n",
+    "\n",
+    "1. Go to [Meta Events Manager](https://business.facebook.com/events_manager2/list)\n",
+    "2. Select your Pixel/Dataset\n",
+    "3. Navigate to \"Test Events\" (if using test_event_code) or \"Events\" tab\n",
+    "4. Look for your events - they should appear within 30 minutes\n",
+    "\n",
+    "**Reference:** [Meta Events Manager Documentation](https://www.facebook.com/business/help/898185560232180?id=1205376682832142)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {
+    "application/vnd.databricks.v1+cell": {
+     "cellMetadata": {
+      "byteLimit": 2048000,
+      "rowLimit": 10000
+     },
+     "inputWidgets": {},
+     "nuid": "9297b77e-53c7-4a0c-837c-5e78d90dbc3d",
+     "showTitle": false,
+     "tableResultSettingsMap": {},
+     "title": ""
+    }
+   },
+   "source": [
+    "### Additional Documentation:\n",
+    "\n",
+    "- [Meta Conversions API Documentation](https://developers.facebook.com/docs/marketing-api/conversions-api)\n",
+    "- [Meta Conversions API - Using the API](https://developers.facebook.com/docs/marketing-api/conversions-api/using-the-api)\n",
+    "- [Meta Conversions API - Parameters](https://developers.facebook.com/docs/marketing-api/conversions-api/parameters)"
+   ]
+  }
+ ],
+ "metadata": {
+  "application/vnd.databricks.v1+notebook": {
+   "computePreferences": {
+    "hardware": {
+     "accelerator": null,
+     "gpuPoolId": null,
+     "memory": null
+    }
+   },
+   "dashboards": [],
+   "environmentMetadata": {
+    "base_environment": "",
+    "environment_version": "4"
+   },
+   "inputWidgetPreferences": null,
+   "language": "python",
+   "notebookMetadata": {
+    "pythonIndentUnit": 4
+   },
+   "notebookName": "Meta CAPI - UDTF Example",
+   "widgets": {
+    "access_token": {
+     "currentValue": "",
+     "nuid": "321d8795-7b9e-4439-89c4-cdb85032ae55",
+     "typedWidgetInfo": {
+      "autoCreated": false,
+      "defaultValue": "",
+      "label": "Meta Access Token",
+      "name": "access_token",
+      "options": {
+       "widgetDisplayType": "Text",
+       "validationRegex": null
+      },
+      "parameterDataType": "String"
+     },
+     "widgetInfo": {
+      "widgetType": "text",
+      "defaultValue": "",
+      "label": "Meta Access Token",
+      "name": "access_token",
+      "options": {
+       "widgetType": "text",
+       "autoCreated": false,
+       "validationRegex": null
+      }
+     }
+    },
+    "api_version": {
+     "currentValue": "v24.0",
+     "nuid": "13952a6d-968f-4c5b-9d9a-5be429010ee5",
+     "typedWidgetInfo": {
+      "autoCreated": false,
+      "defaultValue": "v24.0",
+      "label": "API Version",
+      "name": "api_version",
+      "options": {
+       "widgetDisplayType": "Text",
+       "validationRegex": null
+      },
+      "parameterDataType": "String"
+     },
+     "widgetInfo": {
+      "widgetType": "text",
+      "defaultValue": "v24.0",
+      "label": "API Version",
+      "name": "api_version",
+      "options": {
+       "widgetType": "text",
+       "autoCreated": false,
+       "validationRegex": null
+      }
+     }
+    },
+    "delta_share_catalog": {
+     "currentValue": "meta_capi_sample_data",
+     "nuid": "7e982894-1ea9-48d0-b574-e8e6004cbc82",
+     "typedWidgetInfo": {
+      "autoCreated": false,
+      "defaultValue": "meta_capi_sample_data",
+      "label": "Delta Share Catalog",
+      "name": "delta_share_catalog",
+      "options": {
+       "widgetDisplayType": "Text",
+       "validationRegex": null
+      },
+      "parameterDataType": "String"
+     },
+     "widgetInfo": {
+      "widgetType": "text",
+      "defaultValue": "meta_capi_sample_data",
+      "label": "Delta Share Catalog",
+      "name": "delta_share_catalog",
+      "options": {
+       "widgetType": "text",
+       "autoCreated": false,
+       "validationRegex": null
+      }
+     }
+    },
+    "pixel_id": {
+     "currentValue": "",
+     "nuid": "7d83601b-6490-48e9-a265-3676413e283a",
+     "typedWidgetInfo": {
+      "autoCreated": false,
+      "defaultValue": "",
+      "label": "Meta Pixel ID",
+      "name": "pixel_id",
+      "options": {
+       "widgetDisplayType": "Text",
+       "validationRegex": null
+      },
+      "parameterDataType": "String"
+     },
+     "widgetInfo": {
+      "widgetType": "text",
+      "defaultValue": "",
+      "label": "Meta Pixel ID",
+      "name": "pixel_id",
+      "options": {
+       "widgetType": "text",
+       "autoCreated": false,
+       "validationRegex": null
+      }
+     }
+    },
+    "test_event_code": {
+     "currentValue": "",
+     "nuid": "b1aa2061-cb7f-47d9-a0f8-aff26104750c",
+     "typedWidgetInfo": {
+      "autoCreated": false,
+      "defaultValue": "",
+      "label": "Test Event Code (optional)",
+      "name": "test_event_code",
+      "options": {
+       "widgetDisplayType": "Text",
+       "validationRegex": null
+      },
+      "parameterDataType": "String"
+     },
+     "widgetInfo": {
+      "widgetType": "text",
+      "defaultValue": "",
+      "label": "Test Event Code (optional)",
+      "name": "test_event_code",
+      "options": {
+       "widgetType": "text",
+       "autoCreated": false,
+       "validationRegex": null
+      }
+     }
+    }
+   }
+  },
+  "language_info": {
+   "name": "python"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}

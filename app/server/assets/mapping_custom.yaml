@@ -1,0 +1,42 @@
+action_source:
+  source: action_source
+custom_data:
+  content_ids:
+    source: content_ids
+  content_type:
+    source: content_type
+  currency:
+    source: currency
+  value:
+    source: value
+    transform:
+    - cast_float
+event_id:
+  source: event_id
+event_name:
+  source: event_name
+event_source_url:
+  source: event_source_url
+event_time:
+  source: event_time
+  transform:
+  - to_epoch
+user_data:
+  client_ip_address:
+    source: client_ip_address
+  client_user_agent:
+    source: client_user_agent
+  em:
+    source: email
+    transform:
+    - normalize_email
+    - sha256
+  fbc:
+    source: fbc
+  fbp:
+    source: fbp
+  ph:
+    source: phone
+    transform:
+    - normalize_phone
+    - sha256

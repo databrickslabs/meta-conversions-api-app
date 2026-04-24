@@ -1,0 +1,13 @@
+name: 'conversions-api-app'
+description: 'Guided setup companion for connecting your Databricks Lakehouse to Meta''s Conversions API (CAPI).'
+command: ['python', 'app.py']
+env:
+  - name: 'NODE_ENV'
+    value: 'production'
+user_api_scopes:
+  - sql
+  - sql.warehouses
+  - catalog.catalogs:read
+  - catalog.schemas:read
+  - catalog.tables:read
+  - files.files

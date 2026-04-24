@@ -1,0 +1,36 @@
+event_name:
+  source: "event_name"
+event_time:
+  source: "event_time"
+  transform: ["to_epoch"]
+event_id:
+  source: "event_id"
+action_source:
+  source: "action_source"
+event_source_url:
+  source: "event_source_url"
+user_data:
+  em:
+    source: "email"
+    transform: ["normalize_email", "sha256"]
+  ph:
+    source: "phone"
+    transform: ["normalize_phone", "sha256"]
+  client_ip_address:
+    source: "client_ip_address"
+  client_user_agent:
+    source: "client_user_agent"
+  fbc:
+    source: "fbc"
+  fbp:
+    source: "fbp"
+custom_data:
+  value:
+    source: "value"
+    transform: ["cast_float"]
+  currency:
+    source: "currency"
+  content_ids:
+    source: "content_ids"
+  content_type:
+    source: "content_type"
