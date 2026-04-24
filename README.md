@@ -147,4 +147,4 @@ To report a security vulnerability, please see [`SECURITY.md`](./SECURITY.md).
 
 ## License
 
-See [`LICENSE`](./LICENSE) and [`NOTICE`](./NOTICE). This project is licensed under the Databricks License.
+See [`LICENSE`](./LICENSE) and [`NOTICE.md`](./NOTICE.md). This project is licensed under the Databricks License. `NOTICE.md` lists every bundled third-party dependency and its license.
