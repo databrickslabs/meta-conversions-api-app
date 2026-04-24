@@ -264,7 +264,7 @@ export default function JobSetup({ config, catalogOverride, onBack, onDone, onRe
   const [tableSearching, setTableSearching] = useState(false);
   const [showTableDropdown, setShowTableDropdown] = useState(false);
   const tableDropdownRef = useRef<HTMLDivElement>(null);
-  const searchTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const searchTables = useCallback(async (query: string) => {
     if (!query) { setTableResults([]); return; }
