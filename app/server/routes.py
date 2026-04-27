@@ -613,10 +613,18 @@ class StoreSecretRequest(BaseModel):
 
 
 @router.post("/store-secret")
-async def store_secret(req: StoreSecretRequest):
-    """Create a secret scope (if needed) and store the access token."""
+async def store_secret(req: StoreSecretRequest, request: Request):
+    """Create a secret scope (if needed) and store the access token.
+
+    When the app's service principal creates the scope it gets MANAGE
+    automatically, but the calling user gets nothing — which means SQL
+    `secret(...)` lookups fail later when Quick Start runs as that user
+    via OBO. After storing the secret we grant the calling user READ on
+    the scope so the rest of the flow works.
+    """
     try:
         from databricks.sdk import WorkspaceClient
+        from databricks.sdk.service.workspace import AclPermission
 
         profile = os.environ.get("DATABRICKS_PROFILE")
         w = WorkspaceClient(profile=profile) if profile else WorkspaceClient()
@@ -647,6 +655,34 @@ async def store_secret(req: StoreSecretRequest):
             key=req.secret_key,
             string_value=req.access_token,
         )
+
+        # Grant the calling user READ so SQL `secret(...)` calls in OBO mode succeed.
+        user_principal: str | None = None
+        if IS_DATABRICKS_APP:
+            user_principal = (request.headers.get("x-forwarded-email") or "").strip() or None
+        else:
+            try:
+                me = w.current_user.me()
+                user_principal = me.user_name or None
+            except Exception:
+                logger.debug("Could not resolve current user for scope ACL", exc_info=True)
+
+        if user_principal:
+            try:
+                w.secrets.put_acl(
+                    scope=req.secret_scope,
+                    principal=user_principal,
+                    permission=AclPermission.READ,
+                )
+            except Exception:
+                # Non-fatal: workspace admins already have implicit READ, so
+                # this fails harmlessly for them. Log and move on.
+                logger.warning(
+                    "Could not grant READ on scope %s to %s; the user may need access granted manually.",
+                    req.secret_scope,
+                    user_principal,
+                    exc_info=True,
+                )
 
         return {
             "success": True,
