@@ -29,13 +29,13 @@ Full license text: [https://www.apache.org/licenses/LICENSE-2.0](https://www.apa
 | Package | Version | Ecosystem | Type | Copyright | Source |
 | --- | --- | --- | --- | --- | --- |
 | coverage | 7.13.5 | Python | runtime | Ned Batchelder and 253 others | [https://github.com/coveragepy/coveragepy](https://github.com/coveragepy/coveragepy) |
-| cryptography | 46.0.5 | Python | runtime | The Python Cryptographic Authority and individual contributors <cryptography-dev@python.org> | [https://github.com/pyca/cryptography](https://github.com/pyca/cryptography) |
-| databricks-sdk | 0.102.0 | Python | runtime | UNKNOWN | [https://databricks-sdk-py.readthedocs.io](https://databricks-sdk-py.readthedocs.io) |
-| google-auth | 2.49.1 | Python | runtime | Google Cloud Platform | [https://github.com/googleapis/google-auth-library-python](https://github.com/googleapis/google-auth-library-python) |
-| packaging | 26.0 | Python | runtime | Donald Stufft <donald@stufft.io> | [https://github.com/pypa/packaging](https://github.com/pypa/packaging) |
+| cryptography | 46.0.7 | Python | runtime | The Python Cryptographic Authority and individual contributors <cryptography-dev@python.org> | [https://github.com/pyca/cryptography](https://github.com/pyca/cryptography) |
+| databricks-sdk | 0.105.0 | Python | runtime | UNKNOWN | [https://databricks-sdk-py.readthedocs.io](https://databricks-sdk-py.readthedocs.io) |
+| google-auth | 2.49.2 | Python | runtime | Google Cloud Platform | [https://github.com/googleapis/google-auth-library-python](https://github.com/googleapis/google-auth-library-python) |
+| packaging | 26.1 | Python | runtime | Donald Stufft <donald@stufft.io> | [https://github.com/pypa/packaging](https://github.com/pypa/packaging) |
 | pytest-asyncio | 1.3.0 | Python | runtime | Tin Tvrtković <tinchester@gmail.com> | [https://github.com/pytest-dev/pytest-asyncio](https://github.com/pytest-dev/pytest-asyncio) |
-| python-multipart | 0.0.22 | Python | runtime | Andrew Dunham <andrew@du.nham.ca>, Marcelo Trylesinski <marcelotryle@gmail.com> | [https://github.com/Kludex/python-multipart](https://github.com/Kludex/python-multipart) |
-| requests | 2.32.5 | Python | runtime | Kenneth Reitz | [https://requests.readthedocs.io](https://requests.readthedocs.io) |
+| python-multipart | 0.0.26 | Python | runtime | Andrew Dunham <andrew@du.nham.ca> | [https://github.com/Kludex/python-multipart](https://github.com/Kludex/python-multipart) |
+| requests | 2.33.1 | Python | runtime | Kenneth Reitz <me@kennethreitz.org> | [https://github.com/psf/requests](https://github.com/psf/requests) |
 | uvloop | 0.22.1 | Python | runtime | Yury Selivanov <yury@magic.io> |  |
 | @internationalized/date | 3.12.1 | npm | runtime | _see upstream_ | [https://github.com/adobe/react-spectrum/tree/main/packages/@internationalized/date](https://github.com/adobe/react-spectrum/tree/main/packages/@internationalized/date) |
 | @internationalized/number | 3.6.6 | npm | runtime | _see upstream_ | [https://github.com/adobe/react-spectrum](https://github.com/adobe/react-spectrum) |
@@ -67,14 +67,14 @@ Full license text: [https://opensource.org/licenses/BSD-3-Clause](https://openso
 
 | Package | Version | Ecosystem | Type | Copyright | Source |
 | --- | --- | --- | --- | --- | --- |
-| click | 8.3.1 | Python | runtime | UNKNOWN | [https://github.com/pallets/click/](https://github.com/pallets/click/) |
+| click | 8.3.2 | Python | runtime | UNKNOWN | [https://github.com/pallets/click/](https://github.com/pallets/click/) |
 | httpcore | 1.0.9 | Python | runtime | Tom Christie <tom@tomchristie.com> | [https://www.encode.io/httpcore/](https://www.encode.io/httpcore/) |
 | idna | 3.11 | Python | runtime | Kim Davies <kim+pypi@gumleaf.org> | [https://github.com/kjd/idna](https://github.com/kjd/idna) |
 | protobuf | 6.33.6 | Python | runtime | protobuf@googlegroups.com | [https://developers.google.com/protocol-buffers/](https://developers.google.com/protocol-buffers/) |
 | pycparser | 3.0 | Python | runtime | Eli Bendersky <eliben@gmail.com> | [https://github.com/eliben/pycparser](https://github.com/eliben/pycparser) |
 | python-dotenv | 1.2.2 | Python | runtime | Saurabh Kumar <me+github@saurabh-kumar.com> | [https://github.com/theskumar/python-dotenv](https://github.com/theskumar/python-dotenv) |
-| starlette | 0.52.1 | Python | runtime | Tom Christie <tom@tomchristie.com> | [https://github.com/Kludex/starlette](https://github.com/Kludex/starlette) |
-| uvicorn | 0.42.0 | Python | runtime | Tom Christie <tom@tomchristie.com> | [https://uvicorn.dev/](https://uvicorn.dev/) |
+| starlette | 1.0.0 | Python | runtime | Tom Christie <tom@tomchristie.com> | [https://github.com/Kludex/starlette](https://github.com/Kludex/starlette) |
+| uvicorn | 0.44.0 | Python | runtime | Tom Christie <tom@tomchristie.com> | [https://uvicorn.dev/](https://uvicorn.dev/) |
 | websockets | 16.0 | Python | runtime | Aymeric Augustin <aymeric.augustin@m4x.org> | [https://github.com/python-websockets/websockets](https://github.com/python-websockets/websockets) |
 | react-transition-group | 4.4.5 | npm | runtime | _see upstream_ | [https://github.com/reactjs/react-transition-group](https://github.com/reactjs/react-transition-group) |
 | source-map-js | 1.2.1 | npm | dev | Valentin 7rulnik Semirulnik | [https://github.com/7rulnik/source-map-js](https://github.com/7rulnik/source-map-js) |
@@ -135,29 +135,29 @@ Full license text: [https://opensource.org/licenses/MIT](https://opensource.org/
 | --- | --- | --- | --- | --- | --- |
 | annotated-doc | 0.0.4 | Python | runtime | =?utf-8?q?Sebasti=C3=A1n_Ram=C3=ADrez?= <tiangolo@gmail.com> | [https://github.com/fastapi/annotated-doc](https://github.com/fastapi/annotated-doc) |
 | annotated-types | 0.7.0 | Python | runtime | Adrian Garcia Badaracco <1755071+adriangb@users.noreply.github.com>, Samuel Colvin <s@muelcolvin.com>, Zac Hatfield-Dodds <zac@zhd.dev> | [https://github.com/annotated-types/annotated-types](https://github.com/annotated-types/annotated-types) |
-| anyio | 4.12.1 | Python | runtime | Alex Grönholm <alex.gronholm@nextday.fi> | [https://anyio.readthedocs.io/en/stable/versionhistory.html](https://anyio.readthedocs.io/en/stable/versionhistory.html) |
+| anyio | 4.13.0 | Python | runtime | Alex Grönholm <alex.gronholm@nextday.fi> | [https://anyio.readthedocs.io/en/stable/versionhistory.html](https://anyio.readthedocs.io/en/stable/versionhistory.html) |
 | cffi | 2.0.0 | Python | runtime | Armin Rigo, Maciej Fijalkowski | [https://cffi.readthedocs.io/en/latest/whatsnew.html](https://cffi.readthedocs.io/en/latest/whatsnew.html) |
 | cfgv | 3.5.0 | Python | runtime | Anthony Sottile | [https://github.com/asottile/cfgv](https://github.com/asottile/cfgv) |
-| charset-normalizer | 3.4.6 | Python | runtime | "Ahmed R. TAHRI" <tahri.ahmed@proton.me> | [https://github.com/jawah/charset_normalizer/blob/master/CHANGELOG.md](https://github.com/jawah/charset_normalizer/blob/master/CHANGELOG.md) |
-| fastapi | 0.135.1 | Python | runtime | =?utf-8?q?Sebasti=C3=A1n_Ram=C3=ADrez?= <tiangolo@gmail.com> | [https://github.com/fastapi/fastapi](https://github.com/fastapi/fastapi) |
-| filelock | 3.25.2 | Python | runtime | UNKNOWN | [https://github.com/tox-dev/py-filelock](https://github.com/tox-dev/py-filelock) |
+| charset-normalizer | 3.4.7 | Python | runtime | "Ahmed R. TAHRI" <tahri.ahmed@proton.me> | [https://github.com/jawah/charset_normalizer/blob/master/CHANGELOG.md](https://github.com/jawah/charset_normalizer/blob/master/CHANGELOG.md) |
+| fastapi | 0.136.0 | Python | runtime | =?utf-8?q?Sebasti=C3=A1n_Ram=C3=ADrez?= <tiangolo@gmail.com> | [https://github.com/fastapi/fastapi](https://github.com/fastapi/fastapi) |
+| filelock | 3.29.0 | Python | runtime | UNKNOWN | [https://github.com/tox-dev/py-filelock](https://github.com/tox-dev/py-filelock) |
 | h11 | 0.16.0 | Python | runtime | Nathaniel J. Smith | [https://github.com/python-hyper/h11](https://github.com/python-hyper/h11) |
 | httptools | 0.7.1 | Python | runtime | Yury Selivanov <yury@magic.io> | [https://github.com/MagicStack/httptools](https://github.com/MagicStack/httptools) |
-| identify | 2.6.18 | Python | runtime | Chris Kuehl | [https://github.com/pre-commit/identify](https://github.com/pre-commit/identify) |
+| identify | 2.6.19 | Python | runtime | Chris Kuehl | [https://github.com/pre-commit/identify](https://github.com/pre-commit/identify) |
 | iniconfig | 2.3.0 | Python | runtime | Ronny Pfannschmidt <opensource@ronnypfannschmidt.de>, Holger Krekel <holger.krekel@gmail.com> | [https://github.com/pytest-dev/iniconfig](https://github.com/pytest-dev/iniconfig) |
 | platformdirs | 4.9.6 | Python | runtime | UNKNOWN | [https://github.com/tox-dev/platformdirs](https://github.com/tox-dev/platformdirs) |
 | pluggy | 1.6.0 | Python | runtime | Holger Krekel <holger@merlinux.eu> |  |
 | pre_commit | 4.5.1 | Python | runtime | Anthony Sottile | [https://github.com/pre-commit/pre-commit](https://github.com/pre-commit/pre-commit) |
-| pydantic | 2.12.5 | Python | runtime | Samuel Colvin <s@muelcolvin.com>, Eric Jolibois <em.jolibois@gmail.com>, Hasan Ramezani <hasan.r67@gmail.com>, Adrian Garcia Badaracco <1755071+adriangb@users.noreply.github.com>, Terrence Dorsey <terry@pydantic.dev>, David Montague <david@pydantic.dev>, Serge Matveenko <lig@countzero.co>, Marcelo Trylesinski <marcelotryle@gmail.com>, Sydney Runkle <sydneymarierunkle@gmail.com>, David Hewitt <mail@davidhewitt.io>, Alex Hall <alex.mojaki@gmail.com>, Victorien Plot <contact@vctrn.dev>, Douwe Maan <hi@douwe.me> | [https://github.com/pydantic/pydantic](https://github.com/pydantic/pydantic) |
-| pydantic_core | 2.41.5 | Python | runtime | Samuel Colvin <s@muelcolvin.com>, Adrian Garcia Badaracco <1755071+adriangb@users.noreply.github.com>, David Montague <david@pydantic.dev>, David Hewitt <mail@davidhewitt.dev>, Sydney Runkle <sydneymarierunkle@gmail.com>, Victorien Plot <contact@vctrn.dev> | [https://github.com/pydantic/pydantic-core](https://github.com/pydantic/pydantic-core) |
+| pydantic | 2.13.2 | Python | runtime | Samuel Colvin <s@muelcolvin.com>, Eric Jolibois <em.jolibois@gmail.com>, Hasan Ramezani <hasan.r67@gmail.com>, Adrian Garcia Badaracco <1755071+adriangb@users.noreply.github.com>, Terrence Dorsey <terry@pydantic.dev>, David Montague <david@pydantic.dev>, Serge Matveenko <lig@countzero.co>, Marcelo Trylesinski <marcelotryle@gmail.com>, Sydney Runkle <sydneymarierunkle@gmail.com>, David Hewitt <mail@davidhewitt.dev>, Alex Hall <alex.mojaki@gmail.com>, Victorien Plot <contact@vctrn.dev> | [https://github.com/pydantic/pydantic](https://github.com/pydantic/pydantic) |
+| pydantic_core | 2.46.2 | Python | runtime | Samuel Colvin <s@muelcolvin.com>, Adrian Garcia Badaracco <1755071+adriangb@users.noreply.github.com>, David Montague <david@pydantic.dev>, David Hewitt <mail@davidhewitt.dev>, Sydney Runkle <sydneymarierunkle@gmail.com>, Victorien Plot <contact@vctrn.dev> | [https://github.com/pydantic](https://github.com/pydantic) |
 | pytest | 9.0.3 | Python | runtime | Holger Krekel, Bruno Oliveira, Ronny Pfannschmidt, Floris Bruynooghe, Brianna Laugher, Freya Bruhin, Others (See AUTHORS) | [https://docs.pytest.org/en/latest/](https://docs.pytest.org/en/latest/) |
 | pytest-cov | 7.1.0 | Python | runtime | Marc Schlaich <marc.schlaich@gmail.com> | [https://pytest-cov.readthedocs.io/en/latest/changelog.html](https://pytest-cov.readthedocs.io/en/latest/changelog.html) |
 | python-discovery | 1.2.2 | Python | runtime | UNKNOWN | [https://github.com/tox-dev/python-discovery](https://github.com/tox-dev/python-discovery) |
 | PyYAML | 6.0.3 | Python | runtime | Kirill Simonov | [https://pyyaml.org/](https://pyyaml.org/) |
-| ruff | 0.15.10 | Python | runtime | "Astral Software Inc." <hey@astral.sh> | [https://docs.astral.sh/ruff](https://docs.astral.sh/ruff) |
+| ruff | 0.15.11 | Python | runtime | "Astral Software Inc." <hey@astral.sh> | [https://docs.astral.sh/ruff](https://docs.astral.sh/ruff) |
 | typing-inspection | 0.4.2 | Python | runtime | Victorien Plot <contact@vctrn.dev> | [https://github.com/pydantic/typing-inspection](https://github.com/pydantic/typing-inspection) |
 | urllib3 | 2.6.3 | Python | runtime | Andrey Petrov <andrey.petrov@shazow.net> | [https://github.com/urllib3/urllib3/blob/main/CHANGES.rst](https://github.com/urllib3/urllib3/blob/main/CHANGES.rst) |
-| virtualenv | 21.2.1 | Python | runtime | UNKNOWN | [https://github.com/pypa/virtualenv](https://github.com/pypa/virtualenv) |
+| virtualenv | 21.2.4 | Python | runtime | UNKNOWN | [https://github.com/pypa/virtualenv](https://github.com/pypa/virtualenv) |
 | watchfiles | 1.1.1 | Python | runtime | Samuel Colvin <s@muelcolvin.com> | [https://github.com/samuelcolvin/watchfiles](https://github.com/samuelcolvin/watchfiles) |
 | @babel/code-frame | 7.29.0 | npm | dev | The Babel Team | [https://github.com/babel/babel](https://github.com/babel/babel) |
 | @babel/compat-data | 7.29.0 | npm | dev | The Babel Team | [https://github.com/babel/babel](https://github.com/babel/babel) |
