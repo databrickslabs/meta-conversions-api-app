@@ -43,7 +43,7 @@ Full license text: [https://www.apache.org/licenses/LICENSE-2.0](https://www.apa
 | @react-aria/ssr | 3.10.0 | npm | runtime | _see upstream_ | [https://github.com/adobe/react-spectrum](https://github.com/adobe/react-spectrum) |
 | @react-types/shared | 3.34.0 | npm | runtime | _see upstream_ | [https://github.com/adobe/react-spectrum](https://github.com/adobe/react-spectrum) |
 | @swc/helpers | 0.5.21 | npm | runtime | 강동윤 | [https://github.com/swc-project/swc](https://github.com/swc-project/swc) |
-| baseline-browser-mapping | 2.10.19 | npm | dev | _see upstream_ | [https://github.com/web-platform-dx/baseline-browser-mapping](https://github.com/web-platform-dx/baseline-browser-mapping) |
+| baseline-browser-mapping | 2.10.20 | npm | dev | _see upstream_ | [https://github.com/web-platform-dx/baseline-browser-mapping](https://github.com/web-platform-dx/baseline-browser-mapping) |
 | react-aria | 3.48.0 | npm | runtime | _see upstream_ | [https://github.com/adobe/react-spectrum](https://github.com/adobe/react-spectrum) |
 | react-stately | 3.46.0 | npm | runtime | _see upstream_ | [https://github.com/adobe/react-spectrum](https://github.com/adobe/react-spectrum) |
 | typescript | 5.6.3 | npm | dev | Microsoft Corp. | [https://github.com/microsoft/TypeScript](https://github.com/microsoft/TypeScript) |
@@ -179,7 +179,7 @@ Full license text: [https://opensource.org/licenses/MIT](https://opensource.org/
 | @babel/template | 7.28.6 | npm | dev | The Babel Team | [https://github.com/babel/babel](https://github.com/babel/babel) |
 | @babel/traverse | 7.29.0 | npm | dev | The Babel Team | [https://github.com/babel/babel](https://github.com/babel/babel) |
 | @babel/types | 7.29.0 | npm | dev | The Babel Team | [https://github.com/babel/babel](https://github.com/babel/babel) |
-| @esbuild/darwin-arm64 | 0.25.12 | npm | dev | _see upstream_ | [https://github.com/evanw/esbuild](https://github.com/evanw/esbuild) |
+| @esbuild/darwin-arm64 | 0.27.7 | npm | dev | _see upstream_ | [https://github.com/evanw/esbuild](https://github.com/evanw/esbuild) |
 | @jridgewell/gen-mapping | 0.3.13 | npm | dev | Justin Ridgewell | [https://github.com/jridgewell/sourcemaps](https://github.com/jridgewell/sourcemaps) |
 | @jridgewell/remapping | 2.3.5 | npm | dev | Justin Ridgewell | [https://github.com/jridgewell/sourcemaps](https://github.com/jridgewell/sourcemaps) |
 | @jridgewell/resolve-uri | 3.1.2 | npm | dev | Justin Ridgewell | [https://github.com/jridgewell/resolve-uri](https://github.com/jridgewell/resolve-uri) |
@@ -190,7 +190,7 @@ Full license text: [https://opensource.org/licenses/MIT](https://opensource.org/
 | @restart/hooks | 0.5.1 | npm | runtime | Jason Quense | [https://github.com/jquense/react-common-hooks](https://github.com/jquense/react-common-hooks) |
 | @restart/ui | 1.9.4 | npm | runtime | Jason Quense | [https://github.com/react-restart/ui](https://github.com/react-restart/ui) |
 | @rolldown/pluginutils | 1.0.0-beta.27 | npm | dev | _see upstream_ | [https://github.com/rolldown/rolldown](https://github.com/rolldown/rolldown) |
-| @rollup/rollup-darwin-arm64 | 4.60.1 | npm | dev | Lukas Taegert-Atkinson | [https://github.com/rollup/rollup](https://github.com/rollup/rollup) |
+| @rollup/rollup-darwin-arm64 | 4.60.2 | npm | dev | Lukas Taegert-Atkinson | [https://github.com/rollup/rollup](https://github.com/rollup/rollup) |
 | @types/babel__core | 7.20.5 | npm | dev | _see upstream_ | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) |
 | @types/babel__generator | 7.27.0 | npm | dev | _see upstream_ | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) |
 | @types/babel__template | 7.4.4 | npm | dev | _see upstream_ | [https://github.com/DefinitelyTyped/DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) |
@@ -212,7 +212,7 @@ Full license text: [https://opensource.org/licenses/MIT](https://opensource.org/
 | debug | 4.4.3 | npm | dev | Josh Junon | [https://github.com/debug-js/debug](https://github.com/debug-js/debug) |
 | dequal | 2.0.3 | npm | runtime | Luke Edwards | [https://github.com/lukeed/dequal](https://github.com/lukeed/dequal) |
 | dom-helpers | 5.2.1 | npm | runtime | Jason Quense | [https://github.com/react-bootstrap/dom-helpers](https://github.com/react-bootstrap/dom-helpers) |
-| esbuild | 0.25.12 | npm | dev | _see upstream_ | [https://github.com/evanw/esbuild](https://github.com/evanw/esbuild) |
+| esbuild | 0.27.7 | npm | dev | _see upstream_ | [https://github.com/evanw/esbuild](https://github.com/evanw/esbuild) |
 | escalade | 3.2.0 | npm | dev | Luke Edwards | [https://github.com/lukeed/escalade](https://github.com/lukeed/escalade) |
 | fdir | 6.5.0 | npm | dev | thecodrr | [https://github.com/thecodrr/fdir](https://github.com/thecodrr/fdir) |
 | gensync | 1.0.0-beta.2 | npm | dev | Logan Smyth | [https://github.com/loganfsmyth/gensync](https://github.com/loganfsmyth/gensync) |
@@ -235,14 +235,14 @@ Full license text: [https://opensource.org/licenses/MIT](https://opensource.org/
 | react-is | 16.13.1 | npm | runtime | _see upstream_ | [https://github.com/facebook/react](https://github.com/facebook/react) |
 | react-lifecycles-compat | 3.0.4 | npm | runtime | _see upstream_ | [https://github.com/reactjs/react-lifecycles-compat](https://github.com/reactjs/react-lifecycles-compat) |
 | react-refresh | 0.17.0 | npm | dev | _see upstream_ | [https://github.com/facebook/react](https://github.com/facebook/react) |
-| rollup | 4.60.1 | npm | dev | Rich Harris | [https://github.com/rollup/rollup](https://github.com/rollup/rollup) |
+| rollup | 4.60.2 | npm | dev | Rich Harris | [https://github.com/rollup/rollup](https://github.com/rollup/rollup) |
 | scheduler | 0.27.0 | npm | runtime | _see upstream_ | [https://github.com/facebook/react](https://github.com/facebook/react) |
 | tinyglobby | 0.2.16 | npm | dev | Superchupu | [https://github.com/SuperchupuDev/tinyglobby](https://github.com/SuperchupuDev/tinyglobby) |
 | uncontrollable | 7.2.1 | npm | runtime | Jason Quense | [https://github.com/jquense/uncontrollable](https://github.com/jquense/uncontrollable) |
 | uncontrollable | 8.0.4 | npm | runtime | Jason Quense | [https://github.com/jquense/uncontrollable](https://github.com/jquense/uncontrollable) |
 | update-browserslist-db | 1.2.3 | npm | dev | Andrey Sitnik | [https://github.com/browserslist/update-db](https://github.com/browserslist/update-db) |
 | use-sync-external-store | 1.6.0 | npm | runtime | _see upstream_ | [https://github.com/facebook/react](https://github.com/facebook/react) |
-| vite | 6.4.2 | npm | dev | Evan You | [https://github.com/vitejs/vite](https://github.com/vitejs/vite) |
+| vite | 7.3.2 | npm | dev | Evan You | [https://github.com/vitejs/vite](https://github.com/vitejs/vite) |
 | warning | 4.0.3 | npm | runtime | Berkeley Martinez | [https://github.com/BerkeleyTrue/warning](https://github.com/BerkeleyTrue/warning) |
 
 ---
